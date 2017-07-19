@@ -4,6 +4,12 @@ function [ config ] = loadPTB(config)
 % Most importantly, the display info is in config.device; the essential one
 %   is s.device.windowPtr.
 
+if ismember('refreshConfig', inmem)
+  % clear a function whose persistent variable could hold outdated 
+  % texture pointers, thus re-initializing the variable
+  clear('refreshConfig'); 
+end
+
 %% Set random seed -- if already set, continue using that one
 if exist('RandStream', 'var') % Not on Octave
   if ~isfield(config.device, 'rngAlgorithm')
