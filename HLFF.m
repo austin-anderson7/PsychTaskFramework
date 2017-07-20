@@ -6,7 +6,7 @@ addpath(genpath('./lib'));
 addpath(genpath('./tasks/HLFF'));
 
 config = HLFF_blockDefaults();
-config = loadPTB(config);
+
 if ~exist('subjectId', 'var') % Practice
   subjectId = NaN;
   config = setupPracticeConfig(config);
@@ -35,8 +35,6 @@ end
 
 configLF = HLFF_LFConfig(config);
 configHF = HLFF_HFConfig(config);
-configHF.runSetup.textures = loadTexturesFromConfig(configHF);
-configLF.runSetup.textures = loadTexturesFromConfig(configLF);
 configMon = HLFF_monetaryConfig(config);
 
 %% Generate trials/blocks - if they haven't been generated before
@@ -44,9 +42,12 @@ configMon = HLFF_monetaryConfig(config);
 %   will need to be changed to an integer that divides the generated trial count.
 numBlocks = config.task.numBlocks;
 if ~isfield(Data, 'blocks') || isempty(Data.blocks)
-  blocksMon = generateBlocks(configMon, configMon.trial.generate.catchTrial, configMon.trial.generate.catchIdx);
-  blocksLF =  generateBlocks(configLF, configLF.trial.generate.catchTrial, configLF.trial.generate.catchIdx);
-  blocksHF =  generateBlocks(configHF, configHF.trial.generate.catchTrial, configHF.trial.generate.catchIdx);
+  blocksMon = generateBlocks(configMon, ...
+    configMon.trial.generate.catchTrial, configMon.trial.generate.catchIdx);
+  blocksLF =  generateBlocks(configLF,  ...
+    configLF.trial.generate.catchTrial, configLF.trial.generate.catchIdx);
+  blocksHF =  generateBlocks(configHF,  ...
+    configHF.trial.generate.catchTrial, configHF.trial.generate.catchIdx);
 
   % Record these blocks for manual alteration
   % writetable(vertcat(blocksHF{:}),  'tasks\HLFF\trials\trials_HF.csv');
@@ -89,5 +90,5 @@ for blockIdx = firstBlockIdx:lastBlockIdx
   Data = runNthBlock(Data, blockIdx);
 end
 
-unloadPTB(configLF, configHF);
+unloadPTB(configMon, configLF, configHF);
 end

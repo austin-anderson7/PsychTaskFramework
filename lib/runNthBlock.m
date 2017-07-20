@@ -24,7 +24,7 @@ function Data = runNthBlock(Data, n)
 
   % 1. Extract the important parts from the struct
   block = Data.blocks{n};
-  blockConfig = block.config;
+  blockConfig = refreshConfig(block.config);
   trials = block.trials;
 
   runTrialFn = blockConfig.task.fnHandles.trialFn;

@@ -5,7 +5,7 @@ function [ textureMap ] = loadTexturesFromConfig(configStruct, textureMap)
 %   If provided with a previously generated `textureMap`, it will avoid
 %   redundant loading of previously loaded images.
 
-if ~exist('textureMap', 'var')
+if ~exist('textureMap', 'var') || ~isa(textureMap, 'containers.Map')
   textureMap = containers.Map;
 end
 
